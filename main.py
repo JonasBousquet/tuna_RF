@@ -61,7 +61,7 @@ def main(data_path: str,
 
 
 if __name__ == '__main__':
-    main(data_path='data/db_d13c_sorted_utf_little_changes.csv',
+    main(data_path='./source/db_d13c_sorted_utf.csv',
          target='d13C_cor',
          model=config.mlp_regressor,
          model_param_grid=config.mlp_param_grid,
