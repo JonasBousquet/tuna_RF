@@ -7,7 +7,7 @@ from datetime import datetime
 
 from sklearn.metrics import r2_score, mean_absolute_error, mean_squared_error, explained_variance_score
 
-console = Console()
+console = Console(record=True)
 
 
 def generate_run_directories():
