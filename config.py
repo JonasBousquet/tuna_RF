@@ -25,7 +25,7 @@ mlp_regressor = MLPRegressor()
 first_params = ["c_sp_fao", "SST", "d13C_cor", 'c_ocean']
 
 # saved variables in read_data
-use_params = ["d13C_cor", "c_sp_fao", "c_ocean", "sampling_date", "length_cm", "d13C_pm", "sample_year", "d13C_cor",
+use_params = ["d13C_cor", "c_sp_fao", "c_ocean", "length_cm", "d13C_pm", "sample_year", "d13C_cor",
               "SST", "MLD", "Chl.a", "NPP", "d20", "d18", "d12", "O2_375m", "d13Cdic",
               "d13Cpom", "d15Npom", "doxycline", "dnethetero"]
 

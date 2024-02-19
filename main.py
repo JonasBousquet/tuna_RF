@@ -20,6 +20,10 @@ def main(data_path: str,
 
     # Encode species name
     data = pre.one_hot(data, 'c_sp_fao')
+    data = pre.one_hot(data, 'c_ocean')
+
+    # Change date into yer and numeric
+    #data = pre.date_to_year(data, 'sample_year')
 
     # Split the data into features and target
     X = data.drop(target, axis=1)

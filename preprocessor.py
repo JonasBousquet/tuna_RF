@@ -37,3 +37,16 @@ def one_hot(df: pd.DataFrame, column: str)-> pd.DataFrame:
 
 def save(df: pd.DataFrame, out_path: str):
     df.to_csv(out_path, sep=',', index=False)
+
+
+def date_to_year(data: pd.DataFrame, column: str):
+    """
+    :param data: dataframe
+    :param column: column containing the sampling date in %d.%m.%Y to be changed to year
+    :return: return a column year with that sample year, DELETES THE column !!
+    """
+    data['year'] = pd.to_datetime(data[column], format='%d.%m.%Y').dt.year
+    data['year'] = pd.to_numeric(data['year'])
+    data = data.drop(columns=column)
+    return data
+
