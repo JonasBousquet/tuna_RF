@@ -18,8 +18,8 @@ random_forest_params = {"n_estimators": [500, 1000, 1500],
                         }
 
 
-RFregressor = MLPRegressor()
-mlp_regressor = RandomForestRegressor()
+RFregressor = RandomForestRegressor()
+mlp_regressor = MLPRegressor()
 
 # first tries
 first_params = ["c_sp_fao", "SST", "d13C_cor", 'c_ocean']

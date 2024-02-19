@@ -16,7 +16,7 @@ def main(data_path: str,
     error_dir, importance_dir, main_dir, val_curves_dir, model_dir = utils.generate_run_directories(tag=config.run_tag)
 
     # Load the data
-    data = pre.load_data(data_path, config.first_params)
+    data = pre.load_data(data_path, config.use_params)
 
     # Encode species name
     data = pre.one_hot(data, 'c_sp_fao')
@@ -27,7 +27,6 @@ def main(data_path: str,
 
     # Split the data into training and testing sets
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=test_size, random_state=random_state)
-
 
     # Create a grid search
     grid_search = GridSearchCV(model,
