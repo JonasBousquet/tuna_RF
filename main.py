@@ -16,7 +16,7 @@ def main(data_path: str,
     error_dir, importance_dir, main_dir, val_curves_dir, model_dir = utils.generate_run_directories(tag=config.run_tag)
 
     # Load the data
-    data = pre.load_data(config.path_to_file, config.first_params)
+    data = pre.load_data(data_path, config.first_params)
 
     # Encode species name
     data = pre.one_hot(data, 'c_sp_fao')

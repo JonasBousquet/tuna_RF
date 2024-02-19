@@ -4,6 +4,7 @@ from time import sleep
 from rich.console import Console
 import os
 from datetime import datetime
+import matplotlib as plt
 
 from sklearn.metrics import r2_score, mean_absolute_error, mean_squared_error, explained_variance_score
 
@@ -65,5 +66,6 @@ def save_params(logdir, filename, params):
         json.dump(params, f, indent=2)
 
 
-def joinpath(rootdir, targetdir):
-    return os.path.join(os.sep, rootdir + os.sep, targetdir)
+def make_plot():
+
+    return plot
