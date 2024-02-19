@@ -2,6 +2,7 @@ import pandas as pd
 from sklearn.model_selection import (GridSearchCV, train_test_split, cross_validate)
 import config
 import utils
+import preprocessor as pre
 
 
 def main(data_path: str,
@@ -12,12 +13,13 @@ def main(data_path: str,
          random_state: int,
          cv: int):
 
-    error_dir, importance_dir, main_dir, val_curves_dir, model_dir = utils.generate_run_directories()
+    error_dir, importance_dir, main_dir, val_curves_dir, model_dir = utils.generate_run_directories(tag=config.run_tag)
 
     # Load the data
-    data = pd.read_csv(data_path)
-    data = data.drop(columns=["region", "region.col", "fish_identifier"])
-    data = data.dropna()
+    data = pre.load_data(config.path_to_file, config.first_params)
+
+    # Encode species name
+    data = pre.one_hot(data, 'c_sp_fao')
 
     # Split the data into features and target
     X = data.drop(target, axis=1)
@@ -50,7 +52,7 @@ def main(data_path: str,
     # Predict the target
     y_pred = grid_search.predict(X_test)
 
-    utils.print_regrssion_metrics(y_test, y_pred)
+    utils.print_regression_metrics(y_test, y_pred)
 
     # Print the cross validation scores
     utils.console.log(cross_validate(best_estimator, X, y, cv=cv, scoring=('r2',
@@ -61,10 +63,11 @@ def main(data_path: str,
 
 
 if __name__ == '__main__':
-    main(data_path='./source/db_d13c_sorted_utf.csv',
+    main(data_path=config.path_to_file,
          target='d13C_cor',
-         model=config.mlp_regressor,
-         model_param_grid=config.mlp_param_grid,
+         model=config.RFregressor,
+         model_param_grid=config.random_forest_params,
          test_size=0.2,
          random_state=42,
          cv=5)
+
