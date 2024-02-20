@@ -16,13 +16,13 @@ def main(data_path: str,
     error_dir, importance_dir, main_dir, val_curves_dir, model_dir = utils.generate_run_directories(tag=config.run_tag)
 
     # Load the data
-    data = pre.load_data(data_path, config.use_params)
+    data = pre.load_data(data_path, config.first_params)
 
     # Encode species name
     data = pre.one_hot(data, 'c_sp_fao')
     data = pre.one_hot(data, 'c_ocean')
 
-    # Change date into yer and numeric
+    # Change date into year and numeric
     #data = pre.date_to_year(data, 'sample_year')
 
     # Split the data into features and target

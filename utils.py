@@ -35,11 +35,11 @@ def init_dir(root_dir: str = "runs", tag: str = "") -> str:
     if tag != "":
         run_dir = os.path.join(root_dir,
                                str(datetime.now().
-                                   strftime("pipeline_%d_%m_%Y-%Hh%M") + "-" + tag))
+                                   strftime("pipeline_%d.%m.%y_%Hh%M") + "-" + tag))
     else:
         run_dir = os.path.join(root_dir,
                                datetime.now().
-                               strftime("pipeline_%d_%m_%Y-%Hh%M"))
+                               strftime("pipeline_%d.%m.%y_%Hh%M"))
     if not os.path.exists(run_dir):
         print(f"-> Creating run directory: {run_dir}")
         os.mkdir(run_dir)

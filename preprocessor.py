@@ -15,6 +15,7 @@ def load_data(path: str, columns: list, sep=',', dec='.') -> pd.DataFrame:
     """
     df = pd.read_csv(path, sep=sep, decimal=dec)
     df = df[columns]
+    console.log(f"Model run with {columns}")
     return df
 
 
