@@ -13,10 +13,10 @@ def main(data_path: str,
          random_state: int,
          cv: int):
 
-    error_dir, importance_dir, main_dir, val_curves_dir, model_dir = utils.generate_run_directories(tag=config.run_tag)
+    error_dir, importance_dir, main_dir, val_curves_dir, model_dir, plot_dir = utils.generate_run_directories(tag=config.run_tag)
 
     # Load the data
-    data = pre.load_data(data_path, config.first_params)
+    data = pre.load_data(data_path, config.use_params)
 
     # Encode species name
     data = pre.one_hot(data, 'c_sp_fao')
@@ -46,11 +46,14 @@ def main(data_path: str,
     utils.save_params(logdir=main_dir + "/models/", filename=model.__class__.__name__,
                       params=grid_search.best_params_)
 
+    # Feature importance
+
+
     # Print the best parameters
     utils.console.log(grid_search.best_params_)
 
     # Print the best score
-    utils.console.log(grid_search.best_score_)
+    utils.console.log(f"Best score: {grid_search.best_score_}")
 
     # Predict the target
     y_pred = grid_search.predict(X_test)

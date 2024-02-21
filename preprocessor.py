@@ -16,6 +16,11 @@ def load_data(path: str, columns: list, sep=',', dec='.') -> pd.DataFrame:
     df = pd.read_csv(path, sep=sep, decimal=dec)
     df = df[columns]
     console.log(f"Model run with {columns}")
+    num_na = df.isna().any(axis=1).sum()
+    num_yes = len(df)
+    df = df.dropna()
+    console.log(f"Deleted rows containing NAs ({num_na}/{num_yes})")
+
     return df
 
 

@@ -4,7 +4,7 @@ from time import sleep
 from rich.console import Console
 import os
 from datetime import datetime
-import matplotlib as plt
+import matplotlib.pyplot as plt
 
 from sklearn.metrics import r2_score, mean_absolute_error, mean_squared_error, explained_variance_score
 
@@ -25,7 +25,7 @@ def generate_run_directories(tag: str):
     os.mkdir(model_dir)
     console.log(f"[green]Starting the pipeline!")
     sleep(0.75)
-    return error_dir, importance_dir, main_dir, val_curves_dir, model_dir
+    return error_dir, importance_dir, main_dir, val_curves_dir, model_dir, plot_dir
 
 
 def init_dir(root_dir: str = "runs", tag: str = "") -> str:
@@ -35,7 +35,7 @@ def init_dir(root_dir: str = "runs", tag: str = "") -> str:
     if tag != "":
         run_dir = os.path.join(root_dir,
                                str(datetime.now().
-                                   strftime("pipeline_%d.%m.%y_%Hh%M") + "-" + tag))
+                                   strftime("pipeline_%d.%m.%y_%Hh%M") + "_" + tag))
     else:
         run_dir = os.path.join(root_dir,
                                datetime.now().
@@ -66,6 +66,4 @@ def save_params(logdir, filename, params):
         json.dump(params, f, indent=2)
 
 
-def make_plot():
 
-    return plot
