@@ -18,8 +18,9 @@ def load_data(path: str, columns: list, sep=',', dec='.') -> pd.DataFrame:
     console.log(f"Model run with {columns}")
     num_na = df.isna().any(axis=1).sum()
     num_yes = len(df)
-    df = df.dropna()
-    console.log(f"Deleted rows containing NAs ({num_na}/{num_yes})")
+    df = df.dropna().reset_index()
+    df = df.drop(columns='index')
+    console.log(f"Deleted rows containing NAs ({num_na}/{num_yes} leaving {num_yes-num_na} rows)")
 
     return df
 
@@ -31,10 +32,9 @@ def one_hot(df: pd.DataFrame, column: str)-> pd.DataFrame:
     :return: a pd.Dataframe with the original str-column removed and encoded, at the end
     """
     enc = OneHotEncoder()
-    unique_values = df[column].unique()
     df_enc = enc.fit_transform(df[[column]])
     df_out = pd.DataFrame(df_enc.A, columns=enc.categories_[0])
-
+    out2 = pd.concat([df, df_out], axis=1)
     out = pd.concat([df.drop(columns=column), df_out], axis=1).reindex(df.index)
     console.log(f"On-hot encoder for {column}: (rows are sorted) ")
     console.log(f"In this order: {enc.categories_[0]}")
