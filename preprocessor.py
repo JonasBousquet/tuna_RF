@@ -56,3 +56,4 @@ def date_to_year(data: pd.DataFrame, column: str):
     data = data.drop(columns=column)
     return data
 
+

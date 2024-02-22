@@ -16,11 +16,13 @@ def generate_run_directories(tag: str):
     plot_dir = os.path.join(main_dir, "plots")
     importance_dir = os.path.join(plot_dir, "feature_importance")
     val_curves_dir = os.path.join(plot_dir, "validation_curves")
+    res_curves_dir = os.path.join(plot_dir, "responses_curves")
     model_dir = os.path.join(main_dir, "models/")
     error_dir = os.path.join(plot_dir, "plots_error")
     os.mkdir(plot_dir)
     os.mkdir(importance_dir)
     os.mkdir(val_curves_dir)
+    os.mkdir(res_curves_dir)
     os.mkdir(error_dir)
     os.mkdir(model_dir)
     console.log(f"[green]Starting the pipeline!")
@@ -60,7 +62,7 @@ def save_model(model, path="./model.pkl"):
     with open(path, mode="wb") as outfile:
         pickle.dump(model, outfile)
 
-
+#
 def save_params(logdir, filename, params):
     with open(os.path.join(logdir, filename + "_parameters_.json"), 'w', encoding='utf8') as f:
         json.dump(params, f, indent=2)

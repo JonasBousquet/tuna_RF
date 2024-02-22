@@ -2,18 +2,25 @@ import matplotlib.pyplot as plt
 import config
 import pickle
 import re
-
+import pandas as pd
+import preprocessor as pre
+from sklearn.ensemble import RandomForestRegressor
 
 def pickle_data(pickle_path: str):
     with open(pickle_path, 'rb') as f:
         data = pickle.load(f)
     return data
 
+def pathz(rundir: str):
+    complete_dir = 'runs/'+ rundir
+    model_dir = complete_dir + '/models/RandomForestRegressor.pkl'
+    plot_dir = complete_dir + '/plots'
+    return complete_dir, model_dir, plot_dir
+
 def plot_feature_importance(rundir: str, filename: str):
     # Paths and stuff
-    rundir_com = 'runs/'+rundir
-    model = pickle_data(rundir_com+'/models/RandomForestRegressor.pkl')
-    fig_path = rundir_com+'/plots'
+    complete_dir, model_dir, plot_dir = pathz(rundir)
+    model = pickle_data(model_dir)
 
     # get model information
     importances = model.feature_importances_
@@ -26,11 +33,10 @@ def plot_feature_importance(rundir: str, filename: str):
     # Plot the fig
     plt.figure()
     plt.title(f"Feature Importance with Random Forest Regressor \n Variance explained: {var_percentage_str}")
-
     plt.barh(indices, sorted(importances), align='center')
     plt.yticks(indices, names)
     plt.xlabel('Relative Importance')
-    plt.savefig(fig_path+'/feature_importance/'+filename)
+    plt.savefig(plot_dir + '/feature_importance/' + filename)
     plt.show()
 
 
@@ -46,4 +52,29 @@ def get_var_from_log(rundir: str):
         return var_value
     else:
         print("VAR value not found in the log file.")
+
+
+def data_vs_pred(data_dir: str, rundir: str, var_x: str, var_y: str):
+    cols = [var_x, var_y]
+    df = pre.load_data(data_dir, cols)
+    complete_dir, model_dir, plot_dir = pathz(rundir)
+    x_axis = df[var_x]
+    y_axis = df[var_y]
+
+    # Base fig with data
+    plt.figure()
+    plt.title(f"{var_x} vs {var_y} response")
+    plt.scatter(x_axis, y_axis, color='grey', alpha=0.1)
+    plt.xlabel(f"{var_x}")
+    plt.ylabel(f"{var_y}")
+
+
+    plt.show()
+
+def predict_graph(rundir: str, data: str, var_x: str, var_y: str):
+
+    complete_dir, model_dir, plot_dir = pathz(rundir)
+    model = pickle_data(model_dir)
+    pred = model.predict()
+
 

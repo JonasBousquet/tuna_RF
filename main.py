@@ -1,9 +1,10 @@
 import pandas as pd
 from sklearn.model_selection import (GridSearchCV, train_test_split, cross_validate)
+from sklearnex import patch_sklearn
 import config
 import utils
 import preprocessor as pre
-
+patch_sklearn()
 
 def main(data_path: str,
          target: str,
@@ -16,7 +17,7 @@ def main(data_path: str,
     error_dir, importance_dir, main_dir, val_curves_dir, model_dir, plot_dir = utils.generate_run_directories(tag=config.run_tag)
 
     # Load the data
-    data = pre.load_data(data_path, config.use_params)
+    data = pre.load_data(data_path, config.first_params)
 
     # Encode species name
     data = pre.one_hot(data, 'c_sp_fao')
