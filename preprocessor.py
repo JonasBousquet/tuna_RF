@@ -1,7 +1,7 @@
 import numpy
 import pandas as pd
 import config
-from sklearn.preprocessing import OneHotEncoder
+from sklearn.preprocessing import (OneHotEncoder, StandardScaler)
 from utils import console
 
 
@@ -55,5 +55,15 @@ def date_to_year(data: pd.DataFrame, column: str):
     data['year'] = pd.to_numeric(data['year'])
     data = data.drop(columns=column)
     return data
+
+
+def scaling_data(data: pd.DataFrame) -> pd.DataFrame:
+    scaler = StandardScaler()
+    names = data.columns
+    scaled_data = scaler.fit_transform(data)
+    scaled_out = pd.DataFrame(scaled_data, columns=names)
+    console.log(f"Scaled data for columns:{data.columns}")
+    return scaled_out
+
 
 

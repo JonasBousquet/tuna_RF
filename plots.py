@@ -4,7 +4,7 @@ import pickle
 import re
 import pandas as pd
 import preprocessor as pre
-from sklearn.ensemble import RandomForestRegressor
+
 
 def pickle_data(pickle_path: str):
     with open(pickle_path, 'rb') as f:

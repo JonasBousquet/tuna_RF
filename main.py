@@ -27,7 +27,7 @@ def main(data_path: str,
     #data = pre.date_to_year(data, 'sample_year')
 
     # Split the data into features and target
-    X = data.drop(target, axis=1)
+    X = pre.scaling_data(data.drop(target, axis=1))
     y = data[target]
 
     # Split the data into training and testing sets

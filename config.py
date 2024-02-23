@@ -3,7 +3,7 @@ from sklearn.ensemble import RandomForestRegressor
 
 # Path
 path_to_file = './data/db_d13c_sorted_utf.csv'
-run_tag = 'dummy_test'
+run_tag = 'dummy_test_norma'
 
 
 # Regressor type
