@@ -24,6 +24,14 @@ def load_data(path: str, columns: list, sep=',', dec='.') -> pd.DataFrame:
 
     return df
 
+def compare_data_loader(base_path):
+
+    X_train = base_path + '/JB_X_train.csv'
+    X_test = base_path + '/JB_X_test.csv'
+    y_train = base_path + '/JB_y_train.csv'
+    y_test = base_path + '/JB_y_test.csv'
+
+    return X_train, X_test, y_train, y_test
 
 def one_hot(df: pd.DataFrame, column: str)-> pd.DataFrame:
     """

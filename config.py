@@ -2,8 +2,8 @@ from sklearn.neural_network import MLPRegressor
 from sklearn.ensemble import RandomForestRegressor
 
 # Path
-path_to_file = './data/db_d13c_sorted_utf.csv'
-run_tag = 'dummy_test_norma'
+path_to_file = './data'
+run_tag = 'reduced_params'
 
 
 # Regressor type
@@ -26,7 +26,9 @@ mlp_param_grid = {
 # Parameters
 first_params = ["c_sp_fao", "SST", "d13C_cor", 'c_ocean']
 
-use_params = ["d13C_cor", "c_sp_fao", "c_ocean", "length_cm", "sample_year", "d13C_cor",
+reduced_params = ["sample_year", "d13Cdic", "SST", "d13C_cor"]
+
+use_params = ["d13C_cor", "c_sp_fao", "c_ocean", "length_cm", "sample_year",
               "SST", "MLD", "Chl.a", "NPP", "d20", "d18", "d12", "O2_375m", "d13Cdic",
               "d13Cpom", "d15Npom", "doxycline", "dnethetero"]
 
