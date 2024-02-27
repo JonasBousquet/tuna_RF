@@ -1,7 +1,7 @@
 import numpy
 import pandas as pd
 import config
-from sklearn.preprocessing import OneHotEncoder
+from sklearn.preprocessing import (OneHotEncoder, StandardScaler)
 from utils import console
 
 
@@ -24,6 +24,14 @@ def load_data(path: str, columns: list, sep=',', dec='.') -> pd.DataFrame:
 
     return df
 
+def compare_data_loader(base_path):
+
+    X_train = base_path + '/JB_X_train.csv'
+    X_test = base_path + '/JB_X_test.csv'
+    y_train = base_path + '/JB_y_train.csv'
+    y_test = base_path + '/JB_y_test.csv'
+
+    return X_train, X_test, y_train, y_test
 
 def one_hot(df: pd.DataFrame, column: str)-> pd.DataFrame:
     """
@@ -55,5 +63,15 @@ def date_to_year(data: pd.DataFrame, column: str):
     data['year'] = pd.to_numeric(data['year'])
     data = data.drop(columns=column)
     return data
+
+
+def scaling_data(data: pd.DataFrame) -> pd.DataFrame:
+    scaler = StandardScaler()
+    names = data.columns
+    scaled_data = scaler.fit_transform(data)
+    scaled_out = pd.DataFrame(scaled_data, columns=names)
+    console.log(f"Scaled data for columns:{data.columns}")
+    return scaled_out
+
 
 

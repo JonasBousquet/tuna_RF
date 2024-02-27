@@ -5,6 +5,7 @@ import config
 import utils
 import preprocessor as pre
 patch_sklearn()
+import plots
 
 def main(data_path: str,
          target: str,
@@ -17,21 +18,21 @@ def main(data_path: str,
     error_dir, importance_dir, main_dir, val_curves_dir, model_dir, plot_dir = utils.generate_run_directories(tag=config.run_tag)
 
     # Load the data
-    data = pre.load_data(data_path, config.first_params)
+    X_train, X_test, y_train, y_test = pre.compare_data_loader(data_path)
 
     # Encode species name
-    data = pre.one_hot(data, 'c_sp_fao')
-    data = pre.one_hot(data, 'c_ocean')
+    # data = pre.one_hot(data, 'c_sp_fao')
+    # data = pre.one_hot(data, 'c_ocean')
 
     # Change date into year and numeric
     #data = pre.date_to_year(data, 'sample_year')
 
     # Split the data into features and target
-    X = data.drop(target, axis=1)
-    y = data[target]
+    #X = data.drop(target, axis=1)
+    #y = data[target]
 
     # Split the data into training and testing sets
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=test_size, random_state=random_state)
+    # done in pre.compare_data_loader to compare model runs between different params and GAM models
 
     # Create a grid search
     grid_search = GridSearchCV(model,
@@ -58,6 +59,8 @@ def main(data_path: str,
 
     # Predict the target
     y_pred = grid_search.predict(X_test)
+
+    plots.pred_vs_real(y_pred, y_test, plot_dir)
 
     utils.print_regression_metrics(y_test, y_pred)
 

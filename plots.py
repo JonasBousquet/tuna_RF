@@ -4,7 +4,7 @@ import pickle
 import re
 import pandas as pd
 import preprocessor as pre
-from sklearn.ensemble import RandomForestRegressor
+
 
 def pickle_data(pickle_path: str):
     with open(pickle_path, 'rb') as f:
@@ -14,7 +14,7 @@ def pickle_data(pickle_path: str):
 def pathz(rundir: str):
     complete_dir = 'runs/'+ rundir
     model_dir = complete_dir + '/models/RandomForestRegressor.pkl'
-    plot_dir = complete_dir + '/plots'
+    plot_dir = complete_dir + '/plots/'
     return complete_dir, model_dir, plot_dir
 
 def plot_feature_importance(rundir: str, filename: str):
@@ -36,7 +36,7 @@ def plot_feature_importance(rundir: str, filename: str):
     plt.barh(indices, sorted(importances), align='center')
     plt.yticks(indices, names)
     plt.xlabel('Relative Importance')
-    plt.savefig(plot_dir + '/feature_importance/' + filename)
+    plt.savefig(plot_dir + 'feature_importance/' + filename)
     plt.show()
 
 
@@ -61,6 +61,7 @@ def data_vs_pred(data_dir: str, rundir: str, var_x: str, var_y: str):
     x_axis = df[var_x]
     y_axis = df[var_y]
 
+    #x_data = predict_graph(model_dir, df, var_x)
     # Base fig with data
     plt.figure()
     plt.title(f"{var_x} vs {var_y} response")
@@ -68,13 +69,27 @@ def data_vs_pred(data_dir: str, rundir: str, var_x: str, var_y: str):
     plt.xlabel(f"{var_x}")
     plt.ylabel(f"{var_y}")
 
-
+    plt.savefig(plot_dir + 'example_plot.png')
     plt.show()
 
-def predict_graph(rundir: str, data: str, var_x: str, var_y: str):
+def predict_graph(model_dir: str, data: pd.DataFrame, var_x: str):
 
-    complete_dir, model_dir, plot_dir = pathz(rundir)
+    #complete_dir, model_dir, plot_dir = pathz(rundir)
     model = pickle_data(model_dir)
-    pred = model.predict()
+    x_test = pd.DataFrame(data[var_x])
+    pred = model.predict(x_test)
 
+    return pred
 
+def pred_vs_real(y_pred, y_train, plotdir: str):
+
+    plt.figure()
+    plt.title("Actual $\delta^{13}C$ vs predicted $\delta^{13}C$")
+    plt.scatter(y_train, y_pred, color='blue')
+    plt.plot(range(-20, -13), range(-20, -13), color='red')
+    plt.xlabel('measured $\delta^{13}C$')
+    plt.ylabel('predicted $\delta^{13}C$')
+    name = plotdir+'/validation_curves/real_vs_pred.png'
+    plt.savefig(name)
+    print(f"Plot as been saved as {name}")
+    plt.show()
