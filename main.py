@@ -18,7 +18,7 @@ def main(data_path: str,
     error_dir, importance_dir, main_dir, val_curves_dir, model_dir, plot_dir = utils.generate_run_directories(tag=config.run_tag)
 
     # Load the data
-    X_train, X_test, y_train, y_test = pre.compare_data_loader(data_path)
+    X_train, X_test, y_train, y_test = pre.compare_data_loader(data_path, config.reduced_params)
 
     # Encode species name
     # data = pre.one_hot(data, 'c_sp_fao')
@@ -61,14 +61,16 @@ def main(data_path: str,
     y_pred = grid_search.predict(X_test)
 
     plots.pred_vs_real(y_pred, y_test, plot_dir)
+    plots.live_feature_importance(best_estimator, plot_dir)
+    utils.console.log('')
 
     utils.print_regression_metrics(y_test, y_pred)
 
     # Print the cross validation scores
-    utils.console.log(cross_validate(best_estimator, X, y, cv=cv, scoring=('r2',
-                                                                           'max_error')
-                         ))
-
+    #utils.console.log(cross_validate(best_estimator, X, y, cv=cv, scoring=('r2',
+    #                                                                        'max_error')
+    #                      ))
+    utils.console.log('Crossvalidation has been removed until i get it to work again (x,y missing)')
     utils.console.save_text(main_dir + "/run_log.txt")
 
 

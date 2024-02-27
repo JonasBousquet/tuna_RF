@@ -54,39 +54,29 @@ def get_var_from_log(rundir: str):
         print("VAR value not found in the log file.")
 
 
-def data_vs_pred(data_dir: str, rundir: str, var_x: str, var_y: str):
-    cols = [var_x, var_y]
-    df = pre.load_data(data_dir, cols)
-    complete_dir, model_dir, plot_dir = pathz(rundir)
-    x_axis = df[var_x]
-    y_axis = df[var_y]
+def live_feature_importance(model, plot_dir: str):
 
-    #x_data = predict_graph(model_dir, df, var_x)
-    # Base fig with data
+    importances = model.feature_importances_
+    colnames = model.feature_names_in_
+    indices = range(len(importances))
+    names = [colnames[i] for i in importances.argsort()]
     plt.figure()
-    plt.title(f"{var_x} vs {var_y} response")
-    plt.scatter(x_axis, y_axis, color='grey', alpha=0.1)
-    plt.xlabel(f"{var_x}")
-    plt.ylabel(f"{var_y}")
-
-    plt.savefig(plot_dir + 'example_plot.png')
+    plt.title(f"Feature Importance with Random Forest Regressor")
+    plt.barh(indices, sorted(importances), align='center')
+    plt.yticks(indices, names)
+    plt.xlabel('Relative Importance')
+    name=plot_dir + '/feature_importance/plot.png'
+    plt.savefig(name)
+    print(f"Plot as been saved as {name}")
     plt.show()
 
-def predict_graph(model_dir: str, data: pd.DataFrame, var_x: str):
-
-    #complete_dir, model_dir, plot_dir = pathz(rundir)
-    model = pickle_data(model_dir)
-    x_test = pd.DataFrame(data[var_x])
-    pred = model.predict(x_test)
-
-    return pred
 
 def pred_vs_real(y_pred, y_train, plotdir: str):
 
     plt.figure()
     plt.title("Actual $\delta^{13}C$ vs predicted $\delta^{13}C$")
     plt.scatter(y_train, y_pred, color='blue')
-    plt.plot(range(-20, -13), range(-20, -13), color='red')
+    plt.plot(range(-19, -13), range(-19, -13), color='red')
     plt.xlabel('measured $\delta^{13}C$')
     plt.ylabel('predicted $\delta^{13}C$')
     name = plotdir+'/validation_curves/real_vs_pred.png'

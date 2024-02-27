@@ -24,12 +24,24 @@ def load_data(path: str, columns: list, sep=',', dec='.') -> pd.DataFrame:
 
     return df
 
-def compare_data_loader(base_path):
+def compare_data_loader(base_path: str, columns: list, sep=',', dec='.'):
+    """
+    Function to read in data that was already previously split
+    :param base_path: folder where to find the 4 needed .csv
+    :param columns: columns to be used in the network
+    :param sep:
+    :param dec:
+    :return: X_train, X_test, y_train, y_test
+    """
 
-    X_train = base_path + '/JB_X_train.csv'
-    X_test = base_path + '/JB_X_test.csv'
-    y_train = base_path + '/JB_y_train.csv'
-    y_test = base_path + '/JB_y_test.csv'
+    columns.remove('d13C_cor')
+    console.log(f"Model run with {columns}")
+    X_train = pd.read_csv(base_path + '/JB_X_train.csv', sep=sep, decimal=dec)
+    X_train = X_train[columns]
+    X_test = pd.read_csv(base_path + '/JB_X_test.csv', sep=sep, decimal=dec)
+    X_test = X_test[columns]
+    y_train = pd.read_csv(base_path + '/JB_y_train.csv', sep=sep, decimal=dec).values.ravel()
+    y_test = pd.read_csv(base_path + '/JB_y_test.csv', sep=sep, decimal=dec).values.ravel()
 
     return X_train, X_test, y_train, y_test
 

@@ -3,7 +3,7 @@ from sklearn.ensemble import RandomForestRegressor
 
 # Path
 path_to_file = './data'
-run_tag = 'reduced_params'
+run_tag = 'plot_test'
 
 
 # Regressor type
