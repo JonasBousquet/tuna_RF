@@ -13,16 +13,21 @@ def main(data_path: str,
          model_param_grid: dict,
          test_size: float,
          random_state: int,
-         cv: int):
+         cv: int,
+         variables: list,
+         run_tag: str):
 
-    error_dir, importance_dir, main_dir, val_curves_dir, model_dir, plot_dir = utils.generate_run_directories(tag=config.run_tag)
+    error_dir, importance_dir, main_dir, val_curves_dir, model_dir, plot_dir = utils.generate_run_directories(tag=run_tag)
 
     # Load the data
-    X_train, X_test, y_train, y_test = pre.compare_data_loader(data_path, config.reduced_params)
+    X_train, X_test, y_train, y_test = pre.compare_data_loader(data_path, variables)
 
-    # Encode species name
-    # data = pre.one_hot(data, 'c_sp_fao')
-    # data = pre.one_hot(data, 'c_ocean')
+    if 'c_sp_fao' in X_train.columns:
+        X_train = pre.one_hot(X_train, 'c_sp_fao')
+        X_test = pre.one_hot(X_test, 'c_sp_fao')
+    if 'c_ocean' in X_train.columns:
+        X_train = pre.one_hot(X_train, 'c_ocean')
+        X_test = pre.one_hot(X_test, 'c_ocean')
 
     # Change date into year and numeric
     #data = pre.date_to_year(data, 'sample_year')
@@ -60,9 +65,12 @@ def main(data_path: str,
     # Predict the target
     y_pred = grid_search.predict(X_test)
 
-    plots.pred_vs_real(y_pred, y_test, plot_dir)
-    plots.live_feature_importance(best_estimator, plot_dir)
-    utils.console.log('')
+    title = utils.runtag_to_title(run_tag)
+
+    pred_dir = plot_dir + '/validation_curves/'
+    plots.pred_vs_real(y_pred, y_test, pred_dir, title)
+    plots.live_feature_importance(best_estimator, plot_dir, title)
+
 
     utils.print_regression_metrics(y_test, y_pred)
 
@@ -75,11 +83,16 @@ def main(data_path: str,
 
 
 if __name__ == '__main__':
-    main(data_path=config.path_to_file,
-         target='d13C_cor',
-         model=config.RFregressor,
-         model_param_grid=config.random_forest_params,
-         test_size=0.2,
-         random_state=42,
-         cv=5)
+    for i in config.variables:
+        run_tag = i
+        variables = config.variables[i]
+        main(data_path=config.path_to_file,
+             target='d13C_cor',
+             model=config.RFregressor,
+             model_param_grid=config.random_forest_params,
+             test_size=0.2,
+             random_state=42,
+             cv=5,
+             variables=variables,
+             run_tag=run_tag)
 

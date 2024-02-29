@@ -2,6 +2,9 @@ import matplotlib.pyplot as plt
 import config
 import pickle
 import re
+import numpy as np
+from sklearn.linear_model import LinearRegression
+from sklearn.metrics import root_mean_squared_error
 import pandas as pd
 import preprocessor as pre
 
@@ -54,32 +57,54 @@ def get_var_from_log(rundir: str):
         print("VAR value not found in the log file.")
 
 
-def live_feature_importance(model, plot_dir: str):
+def live_feature_importance(model, plot_dir: str, title):
 
     importances = model.feature_importances_
     colnames = model.feature_names_in_
     indices = range(len(importances))
     names = [colnames[i] for i in importances.argsort()]
     plt.figure()
-    plt.title(f"Feature Importance with Random Forest Regressor")
+    plt.title(f"Feature Importance \n Run: {title}")
     plt.barh(indices, sorted(importances), align='center')
     plt.yticks(indices, names)
     plt.xlabel('Relative Importance')
     name=plot_dir + '/feature_importance/plot.png'
     plt.savefig(name)
     print(f"Plot as been saved as {name}")
-    plt.show()
+    #plt.show()
 
 
-def pred_vs_real(y_pred, y_train, plotdir: str):
+def pred_vs_real(y_pred: pd.DataFrame, y_train: pd.DataFrame, plotdir: str, title: str):
 
     plt.figure()
-    plt.title("Actual $\delta^{13}C$ vs predicted $\delta^{13}C$")
+    plt.title(f"Actual $\\delta^{13}C$ vs predicted $\\delta^{13}C$ \n Run: {title}")
+    # data points
     plt.scatter(y_train, y_pred, color='blue')
+    # red straight {1;1} line
     plt.plot(range(-19, -13), range(-19, -13), color='red')
-    plt.xlabel('measured $\delta^{13}C$')
-    plt.ylabel('predicted $\delta^{13}C$')
-    name = plotdir+'/validation_curves/real_vs_pred.png'
+    # linear model
+    x_values, y_values, r2, slope, rmse = lin_reg(y_pred, y_train)
+    plt.plot(x_values, y_values, linestyle='-.', color='black')
+    # Text & shit
+    plt.xlabel('measured $\\delta^{13}C$')
+    plt.ylabel('predicted $\\delta^{13}C$')
+    plt.annotate(f"n= {len(y_train)}\n$R^2$= {r2}\nSlope= {slope}\nRMSE= {rmse}", xy=(0.04, 0.8), xycoords='axes fraction')
+
+    name = plotdir+'/real_vs_pred.png'
     plt.savefig(name)
     print(f"Plot as been saved as {name}")
     plt.show()
+
+
+def lin_reg(pred: pd.DataFrame, origin: pd.DataFrame):
+    model = LinearRegression()
+    pred = pred.reshape(-1, 1)
+    origin = origin.reshape(-1, 1)
+    res = model.fit(origin, pred)
+    x_values = np.array([i for i in range(-19, -12)]).reshape(-1, 1)
+    y_values = res.predict(x_values)
+
+    r2 = np.round(model.score(origin, pred), 4)
+    slope = np.round(model.coef_[0], 4)[0]
+    rmse = np.round(root_mean_squared_error(origin, pred), 4)
+    return x_values, y_values, r2, slope, rmse

@@ -68,4 +68,5 @@ def save_params(logdir, filename, params):
         json.dump(params, f, indent=2)
 
 
-
+def runtag_to_title(runtag: str):
+    return runtag.replace('_', ' ')

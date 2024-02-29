@@ -34,7 +34,8 @@ def compare_data_loader(base_path: str, columns: list, sep=',', dec='.'):
     :return: X_train, X_test, y_train, y_test
     """
 
-    columns.remove('d13C_cor')
+    if 'd13C_cor' in columns:
+        columns.remove('d13C_cor')
     console.log(f"Model run with {columns}")
     X_train = pd.read_csv(base_path + '/JB_X_train.csv', sep=sep, decimal=dec)
     X_train = X_train[columns]
