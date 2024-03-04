@@ -24,6 +24,8 @@ def load_data(path: str, columns: list, sep=',', dec='.') -> pd.DataFrame:
 
     return df
 
+
+
 def compare_data_loader(base_path: str, columns: list, sep=',', dec='.'):
     """
     Function to read in data that was already previously split
@@ -46,7 +48,8 @@ def compare_data_loader(base_path: str, columns: list, sep=',', dec='.'):
 
     return X_train, X_test, y_train, y_test
 
-def one_hot(df: pd.DataFrame, column: str)-> pd.DataFrame:
+
+def one_hot(df: pd.DataFrame, column: str) -> pd.DataFrame:
     """
     :param df: dataframe to be encoded
     :param column: a column containing strings to be encoded into columns
@@ -55,11 +58,12 @@ def one_hot(df: pd.DataFrame, column: str)-> pd.DataFrame:
     enc = OneHotEncoder()
     df_enc = enc.fit_transform(df[[column]])
     df_out = pd.DataFrame(df_enc.A, columns=enc.categories_[0])
-    out2 = pd.concat([df, df_out], axis=1)
     out = pd.concat([df.drop(columns=column), df_out], axis=1).reindex(df.index)
+    one_hot_dict = {column: [enc.categories_[0]]}
+
     console.log(f"On-hot encoder for {column}: (rows are sorted) ")
     console.log(f"In this order: {enc.categories_[0]}")
-    return out
+    return out, one_hot_dict
 
 
 def save(df: pd.DataFrame, out_path: str):

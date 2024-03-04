@@ -42,8 +42,11 @@ allvars = ["d13C_cor", "c_sp_fao", "c_ocean", "length_cm", "sample_year",
 GAMvars = ["d13C_cor","length_cm",'sample_year', 'd13Cdic','d13Cpom', 'd15Npom',
              'SST',"MLD",'d12',"O2_375m","doxycline"]
 
-REDvars = ['SST', "Chl.a","length_cm",'MLD']
+REDvars = ['SST', "Chl.a", "length_cm",'MLD']
 
-RED2vars = ['SST', "Chl.a","length_cm"]
+RED2vars = ['SST', "Chl.a", "length_cm"]
+TESTvars = ['SST', 'MLD', 'Chl.a', 'length_cm']
 
-variables = {'RFvars': RFvars, 'allvars': allvars, 'GAMvars': GAMvars, 'REDvars': REDvars, 'RED2vars': RED2vars}
+# variables = {'RFvars': RFvars, 'allvars': allvars, 'GAMvars': GAMvars, 'REDvars': REDvars, 'RED2vars': RED2vars}
+
+variables = {'test_vars': TESTvars}

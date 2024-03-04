@@ -62,11 +62,48 @@ def save_model(model, path="./model.pkl"):
     with open(path, mode="wb") as outfile:
         pickle.dump(model, outfile)
 
-#
+
 def save_params(logdir, filename, params):
     with open(os.path.join(logdir, filename + "_parameters_.json"), 'w', encoding='utf8') as f:
         json.dump(params, f, indent=2)
 
 
-def runtag_to_title(runtag: str):
+def runtag2title(runtag: str):
     return runtag.replace('_', ' ')
+
+
+def merge_dict(dict1: dict, dict2: dict):
+    out = dict1.copy()
+    for key, value in dict2.items():
+        out[key] = value
+    return out
+
+
+def encode_dict(dict1, dict2):
+    if dict1 and dict2 is not None:
+        encode_dict = merge_dict(dict1, dict2)
+    elif dict1 is not None:
+        encode_dict = dict1
+    elif dict2 is not None:
+        encode_dict = dict2
+    else:
+        encode_dict = None
+
+    return encode_dict
+
+
+def process_dataframe(df, encoder):
+    for key, items in encoder.items():
+        rows_to_sum = [row for row in items]
+        if rows_to_sum:
+            rows_to_sum = list(rows_to_sum[0])
+            df.loc[key] = df.loc[rows_to_sum].sum()
+            df.drop(index=rows_to_sum, inplace=True)
+        df.sort_values(by='importances', ascending=True, inplace=True)
+    return df
+
+
+def length_short(df):
+    return df.rename(index={'length_cm': 'length', 'c_ocean': 'ocean', 'c_sp_fao':'species'})
+
+

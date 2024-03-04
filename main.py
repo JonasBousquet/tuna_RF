@@ -23,11 +23,17 @@ def main(data_path: str,
     X_train, X_test, y_train, y_test = pre.compare_data_loader(data_path, variables)
 
     if 'c_sp_fao' in X_train.columns:
-        X_train = pre.one_hot(X_train, 'c_sp_fao')
-        X_test = pre.one_hot(X_test, 'c_sp_fao')
+        X_train, dict1 = pre.one_hot(X_train, 'c_sp_fao')
+        X_test, _dict11 = pre.one_hot(X_test, 'c_sp_fao')
+    else:
+        dict1 = None
     if 'c_ocean' in X_train.columns:
-        X_train = pre.one_hot(X_train, 'c_ocean')
-        X_test = pre.one_hot(X_test, 'c_ocean')
+        X_train, dict2 = pre.one_hot(X_train, 'c_ocean')
+        X_test, _dict2 = pre.one_hot(X_test, 'c_ocean')
+    else:
+        dict2 = None
+
+    encoder = utils.encode_dict(dict1, dict2)
 
     # Change date into year and numeric
     #data = pre.date_to_year(data, 'sample_year')
@@ -65,12 +71,11 @@ def main(data_path: str,
     # Predict the target
     y_pred = grid_search.predict(X_test)
 
-    title = utils.runtag_to_title(run_tag)
 
+    # Plots
     pred_dir = plot_dir + '/validation_curves/'
-    plots.pred_vs_real(y_pred, y_test, pred_dir, title)
-    plots.live_feature_importance(best_estimator, plot_dir, title)
-
+    plots.pred_vs_real(y_pred, y_test, pred_dir, run_tag)
+    plots.live_feature_importance(best_estimator, plot_dir, run_tag, encoder)
 
     utils.print_regression_metrics(y_test, y_pred)
 
