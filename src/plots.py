@@ -4,9 +4,8 @@ import pickle
 import re
 import numpy as np
 from sklearn.linear_model import LinearRegression
-from sklearn.metrics import root_mean_squared_error
+from sklearn.metrics import mean_squared_error
 import pandas as pd
-import preprocessor as pre
 
 
 def pickle_data(pickle_path: str):
@@ -71,7 +70,6 @@ def live_feature_importance(model, plot_dir: str, title, encoder=None):
     """
     importances = model.feature_importances_
     colnames = model.feature_names_in_
-    indices = range(len(importances))
     names = [colnames[i] for i in importances.argsort()]
 
     df = pd.DataFrame(sorted(importances), index=names, columns=['importances'])
@@ -80,19 +78,26 @@ def live_feature_importance(model, plot_dir: str, title, encoder=None):
 
     else:
         plot_df = df
-
     plot_df = utils.length_short(plot_df)
+    percent = [100*x/sum(importances) for x in importances]
+    percent.sort()
     indices = range(len(plot_df.index))
     names = plot_df.index
-    plt.figure()
-    plt.title(f"Feature Importance \n Run: {title}")
-    plt.barh(indices, plot_df['importances'], align='center')
-    plt.yticks(indices, names)
-    plt.xlabel('Relative Importance')
-    name = f"{plot_dir}/feature_importance/plot.png"
-    plt.savefig(name, bbox_inches='tight', transparent=True)
+
+    fig, ax = plt.subplots()
+    ax.barh(indices, plot_df['importances'], align='center')
+    for i, y in enumerate(ax.patches):
+        label_per = percent[i]
+        ax.text(y.get_width() + .01, y.get_y() + .35, str(f'{round((label_per), 2)}%'), fontsize=12, fontweight='bold')
+
+    ax.set_yticks(indices, names, weight='bold')
+    ax.set_xlabel('Relative Importance')
+    ax.spines['right'].set_visible(False)
+    ax.spines['top'].set_visible(False)
+    name = f"{plot_dir}/feature_importance/feature_importance.png"
+    fig.savefig(name, bbox_inches='tight', transparent=True)
     print(f"Plot has been saved as {name}")
-    plt.show()
+    fig.show()
 
 
 def pred_vs_real(y_pred: pd.DataFrame, y_train: pd.DataFrame, plotdir: str, runtag: str):
@@ -107,7 +112,6 @@ def pred_vs_real(y_pred: pd.DataFrame, y_train: pd.DataFrame, plotdir: str, runt
 
     plt.rc('axes', axisbelow=True)
     plt.figure()
-    #plt.title(f"Actual $\\delta^{13}C$ vs predicted $\\delta^{13}C$ \n Run: {title}")
     plt.grid(linewidth=.25)
     plt.scatter(y_train, y_pred, color='blue')  # data points
     plt.plot(range(-19, -12), range(-19, -12), color='red')  # red straight {1;1} line
@@ -118,7 +122,8 @@ def pred_vs_real(y_pred: pd.DataFrame, y_train: pd.DataFrame, plotdir: str, runt
     plt.xlim(-19.2, -12.8)
     plt.ylim(-19.2, -12.8)
 
-    text = plt.annotate(f"n= {len(y_train)}\n$r^2$= {r2}\nSlope= {slope}\nRMSE= {rmse}", xy=(0.04, 0.775), xycoords='axes fraction')
+    text = plt.annotate(f"n= {len(y_train)}\n$r^2$= {r2}\nSlope= {slope}\nRMSE= {rmse}", xy=(0.04, 0.775),
+                        xycoords='axes fraction', weight='bold')
     text.set_bbox({'facecolor': 'white', 'edgecolor': 'black', 'linewidth': .5})
     name = plotdir+f"/{runtag}.png"
     plt.savefig(name, bbox_inches='tight', transparent=True)
@@ -140,7 +145,8 @@ def lin_reg(pred: pd.DataFrame, origin: pd.DataFrame):
     x_values = np.array([i for i in range(-19, -12)]).reshape(-1, 1)
     y_values = res.predict(x_values)
 
+
     r2 = np.round(model.score(origin, pred), 4)
     slope = np.round(model.coef_[0], 4)[0]
-    rmse = np.round(root_mean_squared_error(origin, pred), 4)
+    rmse = np.round(mean_squared_error(origin, pred, squared=False), 4)
     return x_values, y_values, r2, slope, rmse
