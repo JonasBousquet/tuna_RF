@@ -54,7 +54,7 @@ def pred_vs_real(y_pred: pd.DataFrame, y_train: pd.DataFrame, plotdir: str, runt
     :param runtag: name of the run, used to name the file and put correct title
     :return: Nothing, saves the plot
     """
-
+    pred_dir = f'{plotdir}/validation_curves/'
     plt.rc('axes', axisbelow=True)
     plt.figure()
     plt.grid(linewidth=.25)
@@ -70,7 +70,7 @@ def pred_vs_real(y_pred: pd.DataFrame, y_train: pd.DataFrame, plotdir: str, runt
     text = plt.annotate(f"n= {len(y_train)}\n$r^2$= {r2}\nSlope= {slope}\nRMSE= {rmse}", xy=(0.04, 0.775),
                         xycoords='axes fraction', weight='bold')
     text.set_bbox({'facecolor': 'white', 'edgecolor': 'black', 'linewidth': .5})
-    name = f"{plotdir}/{runtag}.png"
+    name = f"{pred_dir}/{runtag}.png"
     plt.savefig(name, bbox_inches='tight', transparent=True)
     print(f"Plot as been saved as {name}")
     plt.show()

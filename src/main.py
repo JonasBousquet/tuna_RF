@@ -6,6 +6,7 @@ import preprocessor as pre
 patch_sklearn()
 import plots
 
+
 def main(data_path: str,
          target: str,
          model,
@@ -16,33 +17,18 @@ def main(data_path: str,
          variables: list,
          run_tag: str):
 
-    error_dir, importance_dir, main_dir, val_curves_dir, model_dir, plot_dir = utils.generate_run_directories(tag=run_tag)
+    error_dir, importance_dir, main_dir, val_curves_dir, model_dir, plot_dir = utils.generate_run_directories(
+        tag=run_tag)
 
     # Load the data
-    X_train, X_test, y_train, y_test = pre.compare_data_loader(data_path, variables)
+    X_train, X_test, y_train, y_test = pre.choose_data(data_path=data_path, target=target)
 
-    if 'c_sp_fao' in X_train.columns:
-        X_train, dict1 = pre.one_hot(X_train, 'c_sp_fao')
-        X_test, _dict11 = pre.one_hot(X_test, 'c_sp_fao')
-    else:
-        dict1 = None
-    if 'c_ocean' in X_train.columns:
-        X_train, dict2 = pre.one_hot(X_train, 'c_ocean')
-        X_test, _dict2 = pre.one_hot(X_test, 'c_ocean')
-    else:
-        dict2 = None
-
-    encoder = utils.encode_dict(dict1, dict2)
-
+    # Encode the data
+    X_train, X_test, encoder_dict = utils.encode_data(X_train, X_test)
     # Change date into year and numeric
-    #data = pre.date_to_year(data, 'sample_year')
-
-    # Split the data into features and target
-    #X = data.drop(target, axis=1)
-    #y = data[target]
-
-    # Split the data into training and testing sets
-    # done in pre.compare_data_loader to compare model runs between different params and GAM models
+    if config.date_to_year:
+        X_train = pre.date_to_year(X_train, 'sample_year')
+        X_test = pre.date_to_year(X_test, 'sample_year')
 
     # Create a grid search
     grid_search = GridSearchCV(model,
@@ -54,12 +40,10 @@ def main(data_path: str,
 
     # Fit the grid search to the data
     best_estimator = grid_search.best_estimator_
-    utils.save_model(model=best_estimator, path=model_dir + f"{model.__class__.__name__}.pkl")
-    utils.save_params(logdir=main_dir + "/models/", filename=model.__class__.__name__,
+    utils.save_model(model=best_estimator, path=f"{model_dir}{model.__class__.__name__}.pkl")
+    utils.save_params(logdir=f"{main_dir}/models/",
+                      filename=model.__class__.__name__,
                       params=grid_search.best_params_)
-
-    # Feature importance
-
 
     # Print the best parameters
     utils.console.log(grid_search.best_params_)
@@ -70,20 +54,13 @@ def main(data_path: str,
     # Predict the target
     y_pred = grid_search.predict(X_test)
 
-
     # Plots
-    pred_dir = plot_dir + '/validation_curves/'
-    plots.pred_vs_real(y_pred, y_test, pred_dir, run_tag)
-    plots.live_feature_importance(best_estimator, plot_dir, run_tag, encoder)
+    plots.pred_vs_real(y_pred, y_test, plot_dir, run_tag)
+    plots.live_feature_importance(best_estimator, plot_dir, run_tag, encoder_dict)
 
     utils.print_regression_metrics(y_test, y_pred)
 
-    # Print the cross validation scores
-    #utils.console.log(cross_validate(best_estimator, X, y, cv=cv, scoring=('r2',
-    #                                                                        'max_error')
-    #                      ))
-    utils.console.log('Crossvalidation has been removed until i get it to work again (x,y missing)')
-    utils.console.save_text(main_dir + "/run_log.txt")
+    utils.console.save_text(f"{main_dir}/run_log.txt")
 
 
 if __name__ == '__main__':
@@ -91,7 +68,7 @@ if __name__ == '__main__':
         run_tag = i
         variables = config.variables[i]
         main(data_path=config.path_to_file,
-             target='d13C_cor',
+             target=config.target,
              model=config.RFregressor,
              model_param_grid=config.random_forest_params,
              test_size=0.2,
@@ -99,4 +76,3 @@ if __name__ == '__main__':
              cv=5,
              variables=variables,
              run_tag=run_tag)
-

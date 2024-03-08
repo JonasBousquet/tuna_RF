@@ -1,6 +1,8 @@
 import json
 import pickle
 from time import sleep
+import preprocessor as pre
+import pandas as pd
 from rich.console import Console
 import os
 from datetime import datetime
@@ -130,6 +132,29 @@ def encode_dict(dict1, dict2):
         return dict2
     else:
         return None
+
+
+def encode_data(test_data: pd.DataFrame, train_data: pd.DataFrame):
+    """
+    Encodes the columns 'c_sp_fao' and 'c_ocean' if they are present
+    :param test_data: X_test
+    :param train_data: X_train
+    :return: train_data, test_data with the encoded columns if present and the matiching encoder_dict
+    """
+    if 'c_sp_fao' in train_data.columns:
+        train_data, dict1 = pre.one_hot(train_data, 'c_sp_fao')
+        test_data, _dict11 = pre.one_hot(test_data, 'c_sp_fao')
+    else:
+        dict1 = None
+    if 'c_ocean' in train_data.columns:
+        train_data, dict2 = pre.one_hot(train_data, 'c_ocean')
+        test_data, _dict2 = pre.one_hot(test_data, 'c_ocean')
+    else:
+        dict2 = None
+
+    encoder_dict = encode_dict(dict1, dict2)
+
+    return train_data, test_data, encoder_dict
 
 
 def process_dataframe(df, encoder):

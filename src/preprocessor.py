@@ -1,13 +1,29 @@
 from typing import Tuple, Dict, Any
-
-import numpy
 import pandas as pd
-from numpy import ndarray
 from pandas import DataFrame, Series
-
 import config
 from sklearn.preprocessing import (OneHotEncoder, StandardScaler)
+from sklearn.model_selection import (train_test_split)
 from utils import console
+
+
+def choose_data(data_path: str, target: str):
+    """
+    Choose to either load data from fixed train and tests datasets or load entire data and split them in train and test
+    Depended on config.fixed_train_test_data
+    :param data_path: path to the ./data/ folder containing fixed train and test datasets and entire dataset
+    :param target: target variable to predict
+    :return: The split dataset in X_train, X_test, y_train, y_test
+    """
+    if config.fixed_train_test_data:
+        X_train, X_test, y_train, y_test = compare_data_loader(data_path, config.variables)
+    else:
+        df = load_data(f'{data_path}/{config.name_of_file}')
+        X = df.drop(target, axis=1)
+        y = df[target]
+        X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=.2, random_state=42)
+
+    return X_train, X_test, y_train, y_test
 
 
 def load_data(path: str, columns: list, sep=',', dec='.') -> pd.DataFrame:
