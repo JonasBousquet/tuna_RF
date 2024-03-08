@@ -35,7 +35,7 @@ If you find something google can probably help you better then i do :)
 ## Authors
 
 Jonas Bousquet  
-[E-mail](jonas.bousquet@etudiant.univ-brest.fr)
+[jonas.bousquet@etudiant.univ-brest.fr](jonas.bousquet@etudiant.univ-brest.fr)
 
 
 ## License
