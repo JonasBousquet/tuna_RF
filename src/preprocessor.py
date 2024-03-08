@@ -1,5 +1,10 @@
+from typing import Tuple, Dict, Any
+
 import numpy
 import pandas as pd
+from numpy import ndarray
+from pandas import DataFrame, Series
+
 import config
 from sklearn.preprocessing import (OneHotEncoder, StandardScaler)
 from utils import console
@@ -25,7 +30,6 @@ def load_data(path: str, columns: list, sep=',', dec='.') -> pd.DataFrame:
     return df
 
 
-
 def compare_data_loader(base_path: str, columns: list, sep=',', dec='.'):
     """
     Function to read in data that was already previously split
@@ -39,17 +43,17 @@ def compare_data_loader(base_path: str, columns: list, sep=',', dec='.'):
     if 'd13C_cor' in columns:
         columns.remove('d13C_cor')
     console.log(f"Model run with {columns}")
-    X_train = pd.read_csv(base_path + '/JB_X_train.csv', sep=sep, decimal=dec)
+    X_train = pd.read_csv(f'{base_path}/JB_X_train.csv', sep=sep, decimal=dec)
     X_train = X_train[columns]
-    X_test = pd.read_csv(base_path + '/JB_X_test.csv', sep=sep, decimal=dec)
+    X_test = pd.read_csv(f'{base_path}/JB_X_test.csv', sep=sep, decimal=dec)
     X_test = X_test[columns]
-    y_train = pd.read_csv(base_path + '/JB_y_train.csv', sep=sep, decimal=dec).values.ravel()
-    y_test = pd.read_csv(base_path + '/JB_y_test.csv', sep=sep, decimal=dec).values.ravel()
+    y_train = pd.read_csv(f'{base_path}/JB_y_train.csv', sep=sep, decimal=dec).values.ravel()
+    y_test = pd.read_csv(f'{base_path}/JB_y_test.csv', sep=sep, decimal=dec).values.ravel()
 
     return X_train, X_test, y_train, y_test
 
 
-def one_hot(df: pd.DataFrame, column: str) -> pd.DataFrame:
+def one_hot(df: pd.DataFrame, column: str) -> tuple[DataFrame, dict[Any, Any]]:
     """
     :param df: dataframe to be encoded
     :param column: a column containing strings to be encoded into columns
@@ -72,6 +76,7 @@ def save(df: pd.DataFrame, out_path: str):
 
 def date_to_year(data: pd.DataFrame, column: str):
     """
+    Converts a date with the format dd.mm.yyyy to just the year, deletes the old date column
     :param data: dataframe
     :param column: column containing the sampling date in %d.%m.%Y to be changed to year
     :return: return a column year with that sample year, DELETES THE column !!
@@ -83,6 +88,11 @@ def date_to_year(data: pd.DataFrame, column: str):
 
 
 def scaling_data(data: pd.DataFrame) -> pd.DataFrame:
+    """
+    Scales data using StandardScaler
+    :param data: The dataframe to be scaled.
+    :return: The scaled dataframe.
+    """
     scaler = StandardScaler()
     names = data.columns
     scaled_data = scaler.fit_transform(data)

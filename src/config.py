@@ -2,7 +2,7 @@ from sklearn.neural_network import MLPRegressor
 from sklearn.ensemble import RandomForestRegressor
 
 # Path
-path_to_file = '../data'
+path_to_file = './data'
 run_tag = 'RF_RFvars'
 
 
