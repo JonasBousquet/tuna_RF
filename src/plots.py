@@ -1,5 +1,5 @@
 import matplotlib.pyplot as plt
-import utils
+from src import utils
 import pickle
 import re
 import numpy as np
@@ -9,6 +9,11 @@ import pandas as pd
 
 
 def pickle_data(pickle_path: str):
+    """
+    Load model saved as .pkl (move to model loader)
+    :param pickle_path: Path to the model directory
+    :return: fitted model
+    """
     with open(pickle_path, 'rb') as f:
         data = pickle.load(f)
     return data

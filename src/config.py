@@ -39,10 +39,10 @@ allvars = ["d13C_cor", "c_sp_fao", "c_ocean", "length_cm", "sample_year",
               "SST", "MLD", "Chl.a", "NPP", "d20", "d18", "d12", "O2_375m", "d13Cdic",
               "d13Cpom", "d15Npom", "doxycline", "dnethetero"]
 
-GAMvars = ["d13C_cor","length_cm",'sample_year', 'd13Cdic','d13Cpom', 'd15Npom',
-             'SST',"MLD",'d12',"O2_375m","doxycline"]
+GAMvars = ["d13C_cor", "length_cm", 'sample_year', 'd13Cdic', 'd13Cpom', 'd15Npom',
+             'SST', "MLD", 'd12', "O2_375m", "doxycline"]
 
-REDvars = ['SST', "Chl.a", "length_cm",'MLD']
+REDvars = ['SST', "Chl.a", "length_cm", 'MLD']
 
 RED2vars = ['SST', "Chl.a", "length_cm"]
 TESTvars = ['SST', 'MLD', 'Chl.a']
