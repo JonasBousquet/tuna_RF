@@ -1,6 +1,6 @@
 # Tuna Random Forest regressor 
 
-Random forest regressor to study trends in d13C ratios of 4 tuna species as a proxy to phytoplancton communities. 
+Random forest regressor to study trends in d13C ratios of 4 tuna species as a proxy to phytoplancton communities.  
 A Masterthesis project in cooperation with LOPS and IMT.
 
 ## Description
@@ -39,7 +39,7 @@ If you find something google can probably help you better then i do :)
 
 ## Authors
 
-Jonas Bousquet
+Jonas Bousquet  
 [E-mail](jonas.bousquet@etudiant.univ-brest.fr)
 
 
