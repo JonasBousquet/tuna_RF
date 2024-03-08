@@ -30,12 +30,13 @@ def generate_run_directories(tag: str):
     os.mkdir(res_curves_dir)
     os.mkdir(error_dir)
     os.mkdir(model_dir)
-    console.log(f"[green]Starting the pipeline!")
+    console.log("[green]Starting the pipeline!")
     sleep(0.75)
     return error_dir, importance_dir, main_dir, val_curves_dir, model_dir, plot_dir
 
 
-def init_dir(root_dir: str = "runs", tag: str = "") -> str:
+def init_dir(root_dir: str = "runs",
+             tag: str = "") -> str:
     """
     :param root_dir: The root directory path.
     :param tag: The tag for the run directory
@@ -58,7 +59,8 @@ def init_dir(root_dir: str = "runs", tag: str = "") -> str:
     return run_dir
 
 
-def print_regression_metrics(y_true, y_pred):
+def print_regression_metrics(y_true,
+                             y_pred):
     """
     Regression metrics (R2, MAE, MSE, VAR)
     :param y_true: The true values.
@@ -73,7 +75,8 @@ def print_regression_metrics(y_true, y_pred):
                  f"    -> VAR: {explained_variance_score(y_true=y_true, y_pred=y_pred)}\n")
 
 
-def save_model(model, path="./model.pkl"):
+def save_model(model,
+               path="./model.pkl"):
     """
     Saves the model as a pickle file (.pkl)
     :param model: The model to be saved.
@@ -84,7 +87,9 @@ def save_model(model, path="./model.pkl"):
         pickle.dump(model, outfile)
 
 
-def save_params(logdir, filename, params):
+def save_params(logdir: str,
+                filename: str,
+                params: object):
     """
     Save the parameters.
     :param logdir: The directory to save the parameters.
@@ -104,7 +109,8 @@ def runtag2title(runtag: str):
     return runtag.replace('_', ' ')
 
 
-def merge_dict(dict1: dict, dict2: dict):
+def merge_dict(dict1: dict,
+               dict2: dict):
     """
     Merge two dictionaries.
     :param dict1: The first dictionary.
@@ -117,7 +123,8 @@ def merge_dict(dict1: dict, dict2: dict):
     return out
 
 
-def encode_dict(dict1, dict2):
+def encode_dict(dict1: dict,
+                dict2: dict):
     """
     Creates a dictionary with encoded values and their corresponding encoding
     :param dict1: The first dictionary.
@@ -134,7 +141,8 @@ def encode_dict(dict1, dict2):
         return None
 
 
-def encode_data(test_data: pd.DataFrame, train_data: pd.DataFrame):
+def encode_data(test_data: pd.DataFrame,
+                train_data: pd.DataFrame):
     """
     Encodes the columns 'c_sp_fao' and 'c_ocean' if they are present
     :param test_data: X_test
@@ -157,7 +165,8 @@ def encode_data(test_data: pd.DataFrame, train_data: pd.DataFrame):
     return train_data, test_data, encoder_dict
 
 
-def process_dataframe(df, encoder):
+def process_dataframe(df: pd.DataFrame,
+                      encoder: dict):
     """
     Decode previously encoded columns using the dictionary created by encode_dict()
     :param df: The dataframe to be processed.
@@ -173,7 +182,7 @@ def process_dataframe(df, encoder):
     return df
 
 
-def length_short(df):
+def length_short(df: pd.DataFrame):
     """
     Rename dataframe index for beauty reasons
     :param df: The dataframe to be renamed.

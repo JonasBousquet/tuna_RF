@@ -1,4 +1,6 @@
 from sklearn.ensemble import RandomForestRegressor
+# ------------------------------------------------------------------------------------------------------------
+# --------------------------------------- Paths 'n stuff --------------------------------------
 
 # Path
 path_to_file = './data'
@@ -7,7 +9,8 @@ path_to_file = './data'
 name_of_file = 'db_d13c_sorted_utf.csv'
 target = 'd13C_cor'
 
-
+# ------------------------------------------------------------------------------------------------------------
+# --------------------------------------- Regressor params --------------------------------------
 RFregressor = RandomForestRegressor()
 #random_forest_params = {"n_estimators": [500, 1000, 1500],
 #                        "min_samples_split": [3, 4, 5, 10],
@@ -19,16 +22,18 @@ random_forest_params = {"n_estimators": [500],
                         "min_samples_split": [3],
                         "min_samples_leaf": [3]}
 
-#
+# ------------------------------------------------------------------------------------------------------------
+# --------------------------------------- I dont know how to call that yet --------------------------------------
 
 date_to_year = False
 fixed_train_test_data = True
+Intel_patch = True  # Used to speed up calculation time, WORKS ONLY ON INTEL BASED SYSTEMS
+test = True
 
-
-# Variables to use in the model
+# ------------------------------------------------------------------------------------------------------------
+# --------------------------------------- Variables as lists --------------------------------------
 
 coloring_vars = ["region", "region.col", "lon_dec", "lat_dec", "sample_owner", "d13C_pm"]
-
 
 RFvars = ["sample_year", "d13Cdic", "SST", "d13C_cor"]
 
@@ -45,6 +50,6 @@ RED2vars = ['SST', "Chl.a", "length_cm"]
 
 TESTvars = ['SST', 'MLD', 'Chl.a']
 
+# ----------------------------------- Variables to use in the model with runtag as [key]--------------------------------
 # variables = {'RFvars': RFvars, 'allvars': allvars, 'GAMvars': GAMvars, 'REDvars': REDvars, 'RED2vars': RED2vars}
-
 variables = {'test_vars': TESTvars}

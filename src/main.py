@@ -1,11 +1,12 @@
 from sklearn.model_selection import (GridSearchCV)
-from sklearnex import patch_sklearn
 import config
 import utils
 import preprocessor as pre
-patch_sklearn()
 import plots
 
+if config.Intel_patch:
+    from sklearnex import patch_sklearn
+    patch_sklearn()
 
 def main(data_path: str,
          target: str,
@@ -21,7 +22,9 @@ def main(data_path: str,
         tag=run_tag)
 
     # Load the data
-    X_train, X_test, y_train, y_test = pre.choose_data(data_path=data_path, target=target)
+    X_train, X_test, y_train, y_test = pre.choose_data(data_path=data_path,
+                                                       target=target,
+                                                       variables=variables)
 
     # Encode the data
     X_train, X_test, encoder_dict = utils.encode_data(X_train, X_test)

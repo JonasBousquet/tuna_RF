@@ -7,7 +7,9 @@ from sklearn.metrics import mean_squared_error
 import pandas as pd
 
 
-def live_feature_importance(model, plot_dir: str, title, encoder=None):
+def live_feature_importance(model,
+                            plot_dir: str,
+                            encoder=None):
     """
     Function to plot the feature importance of the model
     :param model:  object

@@ -7,18 +7,23 @@ from sklearn.model_selection import (train_test_split)
 from utils import console
 
 
-def choose_data(data_path: str, target: str):
+def choose_data(data_path: str,
+                target: str,
+                variables: list,
+                name_of_file: str = config.name_of_file):
     """
     Choose to either load data from fixed train and tests datasets or load entire data and split them in train and test
     Depended on config.fixed_train_test_data
+    :param variables: variables to be sent to the model
     :param data_path: path to the ./data/ folder containing fixed train and test datasets and entire dataset
     :param target: target variable to predict
+    :param name_of_file: (optional) name of the entire dataset
     :return: The split dataset in X_train, X_test, y_train, y_test
     """
     if config.fixed_train_test_data:
-        X_train, X_test, y_train, y_test = compare_data_loader(data_path, config.variables)
+        X_train, X_test, y_train, y_test = compare_data_loader(data_path, variables)
     else:
-        df = load_data(f'{data_path}/{config.name_of_file}')
+        df = load_data(f'{data_path}/{name_of_file}', columns=variables)
         X = df.drop(target, axis=1)
         y = df[target]
         X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=.2, random_state=42)
@@ -26,7 +31,10 @@ def choose_data(data_path: str, target: str):
     return X_train, X_test, y_train, y_test
 
 
-def load_data(path: str, columns: list, sep=',', dec='.') -> pd.DataFrame:
+def load_data(path: str,
+              columns: list,
+              sep=',',
+              dec='.') -> pd.DataFrame:
     """
     :param dec: csv decimal symbol present in file
     :param sep: csv separator present in file
@@ -41,12 +49,15 @@ def load_data(path: str, columns: list, sep=',', dec='.') -> pd.DataFrame:
     num_yes = len(df)
     df = df.dropna().reset_index()
     df = df.drop(columns='index')
-    console.log(f"Deleted rows containing NAs ({num_na}/{num_yes} leaving {num_yes-num_na} rows)")
+    console.log(f"Deleted rows containing NAs ({num_na}/{num_yes} leaving {num_yes - num_na} rows)")
 
     return df
 
 
-def compare_data_loader(base_path: str, columns: list, sep=',', dec='.'):
+def compare_data_loader(base_path: str,
+                        columns: list,
+                        sep=',',
+                        dec='.'):
     """
     Function to read in data that was already previously split
     :param base_path: folder where to find the 4 needed .csv
@@ -69,7 +80,8 @@ def compare_data_loader(base_path: str, columns: list, sep=',', dec='.'):
     return X_train, X_test, y_train, y_test
 
 
-def one_hot(df: pd.DataFrame, column: str) -> tuple[DataFrame, dict[Any, Any]]:
+def one_hot(df: pd.DataFrame,
+            column: str) -> tuple[DataFrame, dict[Any, Any]]:
     """
     :param df: dataframe to be encoded
     :param column: a column containing strings to be encoded into columns
@@ -90,7 +102,8 @@ def save(df: pd.DataFrame, out_path: str):
     df.to_csv(out_path, sep=',', index=False)
 
 
-def date_to_year(data: pd.DataFrame, column: str):
+def date_to_year(data: pd.DataFrame,
+                 column: str):
     """
     Converts a date with the format dd.mm.yyyy to just the year, deletes the old date column
     :param data: dataframe
@@ -115,6 +128,3 @@ def scaling_data(data: pd.DataFrame) -> pd.DataFrame:
     scaled_out = pd.DataFrame(scaled_data, columns=names)
     console.log(f"Scaled data for columns:{data.columns}")
     return scaled_out
-
-
-
