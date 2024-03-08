@@ -1,6 +1,5 @@
 import matplotlib.pyplot as plt
-from src import utils
-import re
+from src.RandomForest import utils
 import numpy as np
 from sklearn.linear_model import LinearRegression
 from sklearn.metrics import mean_squared_error
@@ -9,6 +8,7 @@ import pandas as pd
 
 def live_feature_importance(model,
                             plot_dir: str,
+                            runtag: str,
                             encoder=None):
     """
     Function to plot the feature importance of the model
@@ -41,7 +41,7 @@ def live_feature_importance(model,
     ax.set_xlabel('Relative Importance')
     ax.spines['right'].set_visible(False)
     ax.spines['top'].set_visible(False)
-    name = f"{plot_dir}/feature_importance/feature_importance.png"
+    name = f"{plot_dir}/feature_importance/{runtag}_feature_importance.png"
     fig.savefig(name, bbox_inches='tight', transparent=True)
     print(f"Plot has been saved as {name}")
     fig.show()

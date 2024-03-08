@@ -1,6 +1,6 @@
-from typing import Tuple, Dict, Any
+from typing import Any
 import pandas as pd
-from pandas import DataFrame, Series
+from pandas import DataFrame
 import config
 from sklearn.preprocessing import (OneHotEncoder, StandardScaler)
 from sklearn.model_selection import (train_test_split)
@@ -78,6 +78,62 @@ def compare_data_loader(base_path: str,
     y_test = pd.read_csv(f'{base_path}/JB_y_test.csv', sep=sep, decimal=dec).values.ravel()
 
     return X_train, X_test, y_train, y_test
+
+
+def merge_dict(dict1: dict,
+               dict2: dict):
+    """
+    Merge two dictionaries.
+    :param dict1: The first dictionary.
+    :param dict2: The second dictionary.
+    :return: The merged dictionary.
+    """
+    out = dict1.copy()
+    for key, value in dict2.items():
+        out[key] = value
+    return out
+
+
+def encode_dict(dict1: dict,
+                dict2: dict):
+    """
+    Creates a dictionary with encoded values and their corresponding encoding
+    :param dict1: The first dictionary.
+    :param dict2: The second dictionary.
+    :return: The encoded dictionary.
+    """
+    if dict1 and dict2 is not None:
+        return merge_dict(dict1, dict2)
+    elif dict1 is not None:
+        return dict1
+    elif dict2 is not None:
+        return dict2
+    else:
+        return None
+
+
+def encode_data(train_data: pd.DataFrame,
+                test_data: pd.DataFrame):
+    """
+    Encodes the columns 'c_sp_fao' and 'c_ocean' if they are present
+    :param test_data: X_test
+    :param train_data: X_train
+    :return: train_data, test_data with the encoded columns if present and the matiching encoder_dict
+    """
+    if 'c_sp_fao' in train_data.columns:
+        train_data, dict1 = one_hot(train_data, 'c_sp_fao')
+        test_data, _dict11 = one_hot(test_data, 'c_sp_fao')
+    else:
+        dict1 = None
+    if 'c_ocean' in train_data.columns:
+        train_data, dict2 = one_hot(train_data, 'c_ocean')
+        test_data, _dict2 = one_hot(test_data, 'c_ocean')
+    else:
+        dict2 = None
+
+    encoder_dict = encode_dict(dict1, dict2)
+
+    return train_data, test_data, encoder_dict
 
 
 def one_hot(df: pd.DataFrame,

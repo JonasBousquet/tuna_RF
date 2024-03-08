@@ -3,7 +3,7 @@ from sklearn.ensemble import RandomForestRegressor
 # --------------------------------------- Paths 'n stuff --------------------------------------
 
 # Path
-path_to_file = './data'
+path_to_file = '../data'
 
 # only used if fixed_train_test_data = True
 name_of_file = 'db_d13c_sorted_utf.csv'
