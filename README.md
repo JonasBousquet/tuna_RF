@@ -46,3 +46,4 @@ This project is licensed under the CeCILL-C License - see the LICENSE.md file fo
 
 * [Big help from Daniel](https://github.com/Mighty0r0n)
 * [Logger](https://github.com/Mighty0r0n/ml_helper)
+* [Readme template](https://gist.github.com/DomPizzie/7a5ff55ffa9081f2de27c315f5018afc)
