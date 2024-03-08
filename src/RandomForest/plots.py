@@ -1,43 +1,27 @@
+import numpy as np
+import pandas as pd
 import matplotlib.pyplot as plt
 from src.RandomForest import utils
-import numpy as np
-from sklearn.linear_model import LinearRegression
 from sklearn.metrics import mean_squared_error
-import pandas as pd
+from sklearn.linear_model import LinearRegression
 
 
-def live_feature_importance(model,
-                            plot_dir: str,
-                            runtag: str,
-                            encoder=None):
-    """
-    Function to plot the feature importance of the model
-    :param model:  object
-    :param plot_dir: output directory
-    :param title: title of the plot (maybe gonna be removed)
-    :param encoder: (optional) if some variables have been encoded, to add them and display the summed
-    importance
-    :return: saves plot to plotdir/feature_importance
-    """
+def live_feature_importance(model, plot_dir: str, runtag: str, encoder=None):
     importances = model.feature_importances_
     colnames = model.feature_names_in_
-    names = [colnames[i] for i in importances.argsort()]
-
-    df = pd.DataFrame(sorted(importances), index=names, columns=['importances'])
+    df = pd.DataFrame(importances, index=colnames, columns=['importances']).sort_values(by='importances')
     plot_df = utils.process_dataframe(df, encoder) if encoder is not None else df
     plot_df = utils.length_short(plot_df)
-    percent = [100*x/sum(importances) for x in importances]
-    percent.sort()
+    percent = plot_df['importances'] / plot_df['importances'].sum() * 100
     indices = range(len(plot_df.index))
-    names = plot_df.index
 
     fig, ax = plt.subplots()
     ax.barh(indices, plot_df['importances'], align='center')
-    for i, y in enumerate(ax.patches):
-        label_per = percent[i]
-        ax.text(y.get_width() + .01, y.get_y() + .35, str(f'{round((label_per), 2)}%'), fontsize=12, fontweight='bold')
+    for i, (value, percent) in enumerate(zip(plot_df['importances'], percent)):
+        ax.text(value + .01, i, f"{percent:.2f}%", fontsize=12, fontweight='bold', va='center')
 
-    ax.set_yticks(indices, names, weight='bold')
+
+    ax.set_yticks(indices, plot_df.index, weight='bold')
     ax.set_xlabel('Relative Importance')
     ax.spines['right'].set_visible(False)
     ax.spines['top'].set_visible(False)
