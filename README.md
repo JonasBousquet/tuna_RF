@@ -11,7 +11,7 @@ An in-depth paragraph about your project and overview of use.
 
 ### Dependencies
 
-* should run on any OS (win 10/11, linux, macosx)
+* python (i use 3.10 no idea if it works with other versions) 
 * pandas
 * scikit-learn
 * matplotlib
