@@ -82,7 +82,7 @@ def lin_reg(pred: pd.DataFrame, origin: pd.DataFrame):
     """
     Simple linear regression from predictions vs original data
     :param pred: predicted values
-    :param origin: orginal values
+    :param origin: original values
     :return: x and y values for plotting and r2, slope, rmse to show on the plot
     """
     model = LinearRegression()
