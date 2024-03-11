@@ -1,8 +1,9 @@
-from sklearn.model_selection import (GridSearchCV)
-import config
-from utils import generate_run_directories, console, save_model, save_params, print_regression_metrics
-import preprocessor as pre
 import plots
+import config
+import preprocessor as pre
+from sklearn.model_selection import (GridSearchCV)
+from utils import generate_run_directories, console, save_model, save_params, print_regression_metrics
+
 
 if config.Intel_patch:
     from sklearnex import patch_sklearn
@@ -74,7 +75,7 @@ if __name__ == '__main__':
         main(data_path=config.path_to_file,
              target=config.target,
              model=config.RFregressor,
-             model_param_grid=config.random_forest_params,
+             model_param_grid=config.test_forest_params if config.test else config.RFregressor,
              test_size=0.2,
              random_state=42,
              cv=5,

@@ -1,4 +1,5 @@
 from sklearn.ensemble import RandomForestRegressor
+
 # ------------------------------------------------------------------------------------------------------------
 # --------------------------------------- Paths 'n stuff --------------------------------------
 
@@ -12,15 +13,15 @@ target = 'd13C_cor'
 # ------------------------------------------------------------------------------------------------------------
 # --------------------------------------- Regressor params --------------------------------------
 RFregressor = RandomForestRegressor()
-#random_forest_params = {"n_estimators": [500, 1000, 1500],
-#                        "min_samples_split": [3, 4, 5, 10],
-#                        "min_samples_leaf": [3, 4, 5, 10]
-#                        }
+random_forest_params = {"n_estimators": [500, 1000, 1500],
+                        "min_samples_split": [3, 4, 5, 10],
+                        "min_samples_leaf": [3, 4, 5, 10]
+                        }
 
 # Testing params
-random_forest_params = {"n_estimators": [500],
-                        "min_samples_split": [3],
-                        "min_samples_leaf": [3]}
+test_forest_params = {"n_estimators": [500],
+                      "min_samples_split": [3],
+                      "min_samples_leaf": [3]}
 
 # ------------------------------------------------------------------------------------------------------------
 # --------------------------------------- I dont know how to call that yet --------------------------------------
@@ -38,11 +39,11 @@ coloring_vars = ["region", "region.col", "lon_dec", "lat_dec", "sample_owner", "
 RFvars = ["sample_year", "d13Cdic", "SST", "d13C_cor"]
 
 allvars = ["d13C_cor", "c_sp_fao", "c_ocean", "length_cm", "sample_year",
-              "SST", "MLD", "Chl.a", "NPP", "d20", "d18", "d12", "O2_375m", "d13Cdic",
-              "d13Cpom", "d15Npom", "doxycline", "dnethetero"]
+           "SST", "MLD", "Chl.a", "NPP", "d20", "d18", "d12", "O2_375m", "d13Cdic",
+           "d13Cpom", "d15Npom", "doxycline", "dnethetero"]
 
 GAMvars = ["d13C_cor", "length_cm", 'sample_year', 'd13Cdic', 'd13Cpom', 'd15Npom',
-             'SST', "MLD", 'd12', "O2_375m", "doxycline"]
+           'SST', "MLD", 'd12', "O2_375m", "doxycline"]
 
 REDvars = ['SST', "Chl.a", "length_cm", 'MLD']
 
