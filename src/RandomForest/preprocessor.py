@@ -1,10 +1,10 @@
-from typing import Any
-import pandas as pd
-from pandas import DataFrame
 import config
-from sklearn.preprocessing import (OneHotEncoder, StandardScaler)
-from sklearn.model_selection import (train_test_split)
+import pandas as pd
+from typing import Any
 from utils import console
+from pandas import DataFrame
+from sklearn.model_selection import (train_test_split)
+from sklearn.preprocessing import (OneHotEncoder, StandardScaler)
 
 
 def choose_data(data_path: str,
@@ -23,6 +23,7 @@ def choose_data(data_path: str,
     if config.fixed_train_test_data:
         X_train, X_test, y_train, y_test = compare_data_loader(data_path, variables)
     else:
+        variables.append(target)
         df = load_data(f'{data_path}/{name_of_file}', columns=variables)
         X = df.drop(target, axis=1)
         y = df[target]

@@ -1,10 +1,10 @@
+import os
 import json
 import pickle
-from time import sleep
 import pandas as pd
-from rich.console import Console
-import os
+from time import sleep
 from datetime import datetime
+from rich.console import Console
 from sklearn.metrics import r2_score, mean_absolute_error, mean_squared_error, explained_variance_score
 
 console = Console(record=True)
@@ -47,11 +47,11 @@ def init_dir(root_dir: str = "runs",
     if tag != "":
         run_dir = os.path.join(root_dir,
                                str(datetime.now().
-                                   strftime("pipeline_RF_%d.%m.%y_%Hh%M") + "_" + tag))
+                                   strftime("pipeline_RF_%d.%m.%y_%Hh%M%S") + "_" + tag))
     else:
         run_dir = os.path.join(root_dir,
                                datetime.now().
-                               strftime("pipeline_%d.%m.%y_%Hh%M"))
+                               strftime("pipeline_%d.%m.%y_%Hh%M%S"))
     if not os.path.exists(run_dir):
         print(f"-> Creating run directory: {run_dir}")
         os.mkdir(run_dir)

@@ -1,7 +1,6 @@
-import config
 import plots
 import utils
-
+import config
 
 def main(runname):
 

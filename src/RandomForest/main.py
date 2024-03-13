@@ -39,7 +39,7 @@ def main(data_path: str,
     grid_search = GridSearchCV(model,
                                model_param_grid,
                                cv=cv,
-                               verbose=3,
+                               verbose=1,
                                return_train_score=True,
                                n_jobs=-1).fit(X_train, y_train)
 
@@ -60,8 +60,15 @@ def main(data_path: str,
     y_pred = grid_search.predict(X_test)
 
     # Plots
-    plots.pred_vs_real(y_pred, y_test, plot_dir, run_tag)
-    plots.live_feature_importance(best_estimator, plot_dir, run_tag, encoder_dict)
+    plots.pred_vs_real(y_pred=y_pred,
+                            y_test=y_test,
+                            plotdir=plot_dir,
+                            runtag=run_tag,
+                            target=target)
+    plots.live_feature_importance(model=best_estimator,
+                                  plot_dir=plot_dir,
+                                  runtag=run_tag,
+                                  encoder=encoder_dict)
 
     print_regression_metrics(y_test, y_pred)
 
