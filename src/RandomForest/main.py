@@ -82,7 +82,7 @@ if __name__ == '__main__':
         main(data_path=config.path_to_file,
              target=config.target,
              model=config.RFregressor,
-             model_param_grid=config.test_forest_params if config.test else config.RFregressor,
+             model_param_grid=config.test_forest_params if config.test else config.random_forest_params,
              test_size=0.2,
              random_state=42,
              cv=5,
