@@ -1,3 +1,5 @@
+import os
+
 import config
 import pandas as pd
 from typing import Any
@@ -20,14 +22,28 @@ def choose_data(data_path: str,
     :param name_of_file: (optional) name of the entire dataset
     :return: The split dataset in X_train, X_test, y_train, y_test
     """
-    if config.fixed_train_test_data:
-        X_train, X_test, y_train, y_test = compare_data_loader(data_path, variables)
+
+    if target == 'd13C_cor' and config.fixed_train_test_data:
+        data_path = f'{data_path}/d13C'
+        X_train, X_test, y_train, y_test = compare_data_loader(base_path=data_path,
+                                                               columns=variables,
+                                                               target=target)
+    elif target == 'logHg' and config.fixed_train_test_data:
+        data_path = f'{data_path}/Hg'
+        X_train, X_test, y_train, y_test = compare_data_loader(base_path=data_path,
+                                                               columns=variables,
+                                                               target=target)
     else:
         variables.append(target)
-        df = load_data(f'{data_path}/{name_of_file}', columns=variables)
-        X = df.drop(target, axis=1)
+        df = load_data(f'{data_path}/{name_of_file}',
+                       columns=variables)
+        X = df.drop(target,
+                    axis=1)
         y = df[target]
-        X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=.2, random_state=42)
+        X_train, X_test, y_train, y_test = train_test_split(X,
+                                                            y,
+                                                            test_size=.2,
+                                                            random_state=42)
 
     return X_train, X_test, y_train, y_test
 
@@ -57,28 +73,39 @@ def load_data(path: str,
 
 def compare_data_loader(base_path: str,
                         columns: list,
+                        target: str,
                         sep=',',
                         dec='.'):
-    """
-    Function to read in data that was already previously split
-    :param base_path: folder where to find the 4 needed .csv
-    :param columns: columns to be used in the network
-    :param sep:
-    :param dec:
-    :return: X_train, X_test, y_train, y_test
-    """
 
-    if 'd13C_cor' in columns:
-        columns.remove('d13C_cor')
-    console.log(f"Model run with {columns}")
-    X_train = pd.read_csv(f'{base_path}/JB_X_train.csv', sep=sep, decimal=dec)
+    if target == 'd13C_cor':
+        j = 'd13C'
+    elif target == 'logHg':
+        j = 'hg'
+
+    X_train = pd.read_csv(f'{base_path}/X_train_{j}_{config.dataset_name}.csv',
+                          sep=sep,
+                          decimal=dec)
+    X_test = pd.read_csv(f'{base_path}/X_test_{j}_{config.dataset_name}.csv',
+                         sep=sep,
+                         decimal=dec)
+    y_train = pd.read_csv(f'{base_path}/y_train_{j}_{config.dataset_name}.csv',
+                          sep=sep,
+                          decimal=dec).values.ravel()
+    y_test = pd.read_csv(f'{base_path}/y_test_{j}_{config.dataset_name}.csv',
+                         sep=sep,
+                         decimal=dec).values.ravel()
+    remove_item_silently(columns, target)
+    console.log(f"Model run with {target} as y \n and {columns} as X")
     X_train = X_train[columns]
-    X_test = pd.read_csv(f'{base_path}/JB_X_test.csv', sep=sep, decimal=dec)
     X_test = X_test[columns]
-    y_train = pd.read_csv(f'{base_path}/JB_y_train.csv', sep=sep, decimal=dec).values.ravel()
-    y_test = pd.read_csv(f'{base_path}/JB_y_test.csv', sep=sep, decimal=dec).values.ravel()
-
     return X_train, X_test, y_train, y_test
+
+
+def remove_item_silently(itemlist, item):
+    try:
+        itemlist.remove(item)
+    except ValueError:
+        pass
 
 
 def merge_dict(dict1: dict,
